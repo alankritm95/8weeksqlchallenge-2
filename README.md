@@ -167,11 +167,57 @@ SELECT
   MAX(pizza_per_order) AS pizza_count
 FROM cte;
 
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/1113d3ef-f01d-41a6-ae67-e86eb679f5f8)
+
 
 ### For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+
+select customer_id, 
+sum(case when (exclusions is NULL and extras is NULL) then 1
+else 0 end) as no_change_in_pizza,
+sum(case when (exclusions is not NULL or extras is not NULL) then 1
+else 0 end) as change_in_pizza
+from cust_orders_temp c join runr_orders_temp r
+on c.order_id = r.order_id
+where cancellation is NULL
+ group by customer_id;
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/484ba37b-d9aa-459f-b931-5f2c9bceb0bd)
+
+
 ### How many pizzas were delivered that had both exclusions and extras?
+
+select customer_id, 
+sum(case when (exclusions is not NULL and extras is not NULL) then 1
+else 0 end) as change_in_pizza
+from cust_orders_temp c join runr_orders_temp r
+on c.order_id = r.order_id
+where cancellation is NULL
+ group by customer_id;
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/50427950-d10b-432f-8c63-a1f9664a7aa0)
+
 ### What was the total volume of pizzas ordered for each hour of the day?
+
+SELECT hour(order_time) AS Hour,
+       count(order_id) AS 'pizzas ordered'
+FROM cust_orders_temp
+GROUP BY Hour
+ORDER BY Hour;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/af50bbdf-42e5-4e08-ac3f-d53b7060d8cb)
+
+
 ### What was the volume of orders for each day of the week?
+
+SELECT dayname(order_time) AS day_of_week,
+       count(order_id) AS 'pizzas ordered'
+FROM cust_orders_temp
+GROUP BY day_of_week
+ORDER BY day_of_week;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/86684649-b39b-41eb-89da-3c20ee6edfe5)
+
 
 
 
