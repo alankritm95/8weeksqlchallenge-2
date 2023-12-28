@@ -98,6 +98,81 @@ select * from runr_orders_temp;
 
 ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/99b2c9c9-0bf3-49a6-b6c8-95ef8c0a3577)
 
+## Case Study Questions
+
+### How many pizzas were ordered?
+
+SELECT count(pizza_id) AS "Total_Pizzas_Ordered"
+FROM pizza_runner.cust_orders_temp;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/d62264b0-c8e0-42ad-b4c6-ffa28ae5b865)
+
+
+### How many unique customer orders were made?
+
+select count(distinct order_id) as 'unique_orders'
+ from cust_orders_temp;
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/9b0f6c00-daea-43f9-82be-1e1a42710e9f)
+
+
+### How many successful orders were delivered by each runner?
+
+select runner_id, count(order_id) as 'delivered_orders'
+ from runr_orders_temp
+ where cancellation is NULL
+ group by runner_id;
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/36c80e62-12b7-4ca7-a2e2-c86be6c572d9)
+
+
+### How many of each type of pizza was delivered?
+
+
+select c.pizza_id, pizza_name, count(c.pizza_id) as 'tot_pizzas'
+ from runr_orders_temp r join cust_orders_temp c
+ on r.order_id = c.order_id join pizza_names p
+ on c.pizza_id = p.pizza_id
+ where cancellation is NULL
+ group by c.pizza_id, pizza_name;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/6ad2676b-1699-4140-a13c-6d459940c202)
+
+ 
+### How many Vegetarian and Meatlovers were ordered by each customer?
+
+ select customer_id, pizza_name,count(pizza_name) as count from cust_orders_temp c
+ join pizza_names p
+ on c.pizza_id = p.pizza_id
+ group by c.customer_id, pizza_name; 
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/12c4fa70-9584-41cf-942e-fb467fa137e2)
+
+
+### What was the maximum number of pizzas delivered in a single order?
+
+WITH cte AS
+(
+  SELECT 
+    c.order_id, 
+    COUNT(c.pizza_id) AS pizza_per_order
+  FROM cust_orders_temp c
+  JOIN runr_orders_temp r
+    ON c.order_id = r.order_id
+  WHERE cancellation is null
+  GROUP BY c.order_id
+)
+
+SELECT
+  MAX(pizza_per_order) AS pizza_count
+FROM cte;
+
+
+### For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+### How many pizzas were delivered that had both exclusions and extras?
+### What was the total volume of pizzas ordered for each hour of the day?
+### What was the volume of orders for each day of the week?
+
 
 
 
