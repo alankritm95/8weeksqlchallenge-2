@@ -27,9 +27,19 @@ Datasets crucial for this case study include:
 
 4. **Pizza_Names Table:**
    - Highlights the two available pizzas at Pizza Runner: Meat Lovers and Vegetarian.
-
+  
 5. **Pizza_Recipes Table:**
    - Specifies the standard set of toppings associated with each pizza_id.
-
+  
 6. **Pizza_Toppings Table:**
    - Enlists all topping_name values along with their corresponding topping_id values.
+
+  
+
+## Entity Relationship Diagram
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/645f746a-b24c-4312-bbc4-b7d6ff84b1ff)
+  
+
+## Data Cleaning & Transformation
+
