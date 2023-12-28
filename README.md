@@ -43,3 +43,24 @@ Datasets crucial for this case study include:
 
 ## Data Cleaning & Transformation
 
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/2afdbb7c-f4d9-485d-9ee2-b7a79a5a12a3)
+
+Cleaning the table:
+
+DROP TABLE IF EXISTS cust_orders_temp;
+CREATE TEMPORARY TABLE cust_orders_temp AS
+SELECT order_id, customer_id, pizza_id,
+case when exclusions = ''  then NULL 
+when exclusions = 'null' then NULL 
+else exclusions end as exclusions,
+case when extras = '' then NULL
+when extras = 'null' then NULL
+else extras end as extras, order_time
+
+FROM customer_orders;
+
+SELECT * FROM cust_orders_temp;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/de0327c8-f6c9-41f8-a1d7-c3241375cdb7)
+
+
