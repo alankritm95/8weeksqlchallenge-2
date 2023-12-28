@@ -43,6 +43,8 @@ Datasets crucial for this case study include:
 
 ## Data Cleaning & Transformation
 
+### customer_orders table
+
 ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/2afdbb7c-f4d9-485d-9ee2-b7a79a5a12a3)
 
 Cleaning the table:
@@ -62,5 +64,40 @@ FROM customer_orders;
 SELECT * FROM cust_orders_temp;
 
 ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/de0327c8-f6c9-41f8-a1d7-c3241375cdb7)
+
+### runner_orders table 
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/d36f5313-7351-43e8-b44d-e52046ac1b2b)
+
+
+Cleaning the table:
+
+drop TABLE IF EXISTS runr_orders_temp;
+CREATE TEMPORARY TABLE runr_orders_temp AS
+select order_id, runner_id, pickup_time,
+case when distance like '%km%' then replace(distance, 'km', '')
+when distance like '% km%' then replace(distance, ' km', '')
+when distance = 'null' then NULL
+else distance end as 'distance',
+
+case when duration like '% minutes%' then replace(duration, ' minutes', '')
+when duration like '%minutes%' then replace(duration, 'minutes', '')
+when duration like '%minute%' then replace(duration, 'minute', '')
+when duration like '% mins%' then replace(duration, ' mins', '')
+when duration like '%mins%' then replace(duration, 'mins', '')
+when duration = 'null' then NULL
+else duration
+end as 'duration',
+
+case when cancellation = '' then NULL
+when cancellation = 'null' then NULL
+else cancellation end as 'cancellation'
+from runner_orders;
+
+select * from runr_orders_temp;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/99b2c9c9-0bf3-49a6-b6c8-95ef8c0a3577)
+
+
 
 
