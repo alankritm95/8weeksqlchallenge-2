@@ -228,7 +228,7 @@ GROUP BY Registration_week;
 ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/f1ed2cd4-7854-49f1-a4de-b4f177195655)
 
 
-What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
+### What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
 
 with cte as(
 select runner_id, order_time, pickup_time, TIMESTAMPDIFF(MINUTE, c.order_time, r.pickup_time) as diff
@@ -241,13 +241,73 @@ select runner_id, avg(diff) as 'avg duration' from cte group by runner_id;
 ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/c22fc6dc-6748-4f2b-89f4-3f13f6aecef6)
 
 
-Is there any relationship between the number of pizzas and how long the order takes to prepare?
+### Is there any relationship between the number of pizzas and how long the order takes to prepare?
+
+with cte as(
+SELECT 
+    c.order_id, 
+    COUNT(c.order_id) AS count_order, 
+    c.order_time, 
+    r.pickup_time, 
+    timestampdiff(MINUTE, c.order_time, r.pickup_time) AS prep_time_minutes
+  FROM cust_orders_temp AS c
+  JOIN runr_orders_temp AS r
+    ON c.order_id = r.order_id
+   WHERE cancellation IS NULL
+  GROUP BY c.order_id, c.order_time, r.pickup_time
+)
+
+select count_order, round(avg(prep_time_minutes), 2) as avg_time from cte
+group by count_order;
+  
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/f4ee2a5c-c142-49b3-a60d-63020a39cb81)
 
 
-What was the average distance travelled for each customer?
-What was the difference between the longest and shortest delivery times for all orders?
-What was the average speed for each runner for each delivery and do you notice any trend for these values?
-What is the successful delivery percentage for each runner?
+### What was the average distance travelled for each customer?
+
+select customer_id, round(avg(distance), 2) as avg_distance FROM cust_orders_temp AS c
+  JOIN runr_orders_temp AS r
+    ON c.order_id = r.order_id
+   WHERE cancellation IS NULL
+  GROUP BY customer_id;
+
+  ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/2f1eff31-a403-412b-9d6e-bd550cb968a9)
+
+
+### What was the difference between the longest and shortest delivery times for all orders?
+
+select max(duration) - min(duration)
+as difference from runr_orders_temp where cancellation is NUll;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/de97e27d-3670-4ebf-8533-d13a4b994bea)
+
+
+### What was the average speed for each runner for each delivery and do you notice any trend for these values?
+
+SELECT runner_id,
+       distance AS distance_km,
+       round(duration/60, 2) AS duration_hr,
+       round(distance*60/duration, 2) AS average_speed
+FROM runr_orders_temp
+WHERE cancellation IS NULL
+ORDER BY runner_id;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/799f733e-5622-4def-87b7-fd78b4bc8419)
+
+
+### What is the successful delivery percentage for each runner?
+
+
+select runner_id, 
+
+(round(sum(case when distance is null then 0
+else 1 end) * 100 / count(runner_id),2) ) as successful_deliveries from runr_orders_temp 
+group by runner_id;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/db8762d8-4785-4edf-8907-34e09feb3b64)
+
+
+
 
 
 
