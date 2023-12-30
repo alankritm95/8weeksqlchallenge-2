@@ -218,6 +218,37 @@ ORDER BY day_of_week;
 
 ![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/86684649-b39b-41eb-89da-3c20ee6edfe5)
 
+### How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
+
+SELECT week(registration_date) as 'Registration_week',
+       count(runner_id) as 'No. of runners'
+FROM runners
+GROUP BY Registration_week;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/f1ed2cd4-7854-49f1-a4de-b4f177195655)
+
+
+What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
+
+with cte as(
+select runner_id, order_time, pickup_time, TIMESTAMPDIFF(MINUTE, c.order_time, r.pickup_time) as diff
+from cust_orders_temp c join runr_orders_temp r on c.order_id = r.order_id
+where cancellation is NULL)
+
+select runner_id, avg(diff) as 'avg duration' from cte group by runner_id;
+
+
+![image](https://github.com/alankritm95/8weeksqlchallenge-2/assets/129503746/c22fc6dc-6748-4f2b-89f4-3f13f6aecef6)
+
+
+Is there any relationship between the number of pizzas and how long the order takes to prepare?
+
+
+What was the average distance travelled for each customer?
+What was the difference between the longest and shortest delivery times for all orders?
+What was the average speed for each runner for each delivery and do you notice any trend for these values?
+What is the successful delivery percentage for each runner?
+
 
 
 
